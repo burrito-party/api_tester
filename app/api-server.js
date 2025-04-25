@@ -65,10 +65,14 @@ MongoClient.connect(mongo_url, { useNewUrlParser: true }, (err, client) => {
 })
 
 function api_authenticate(user, pass, req, res) {
+	if (typeof user !== 'string' || typeof pass !== 'string') {
+		res.status(400).json({ "message": "Invalid input types" });
+		return;
+	}
 	console.log('>>> Logging user ' + user + ' with password: ' + pass);
 	const users = db.collection('users');
 
-	users.findOne({ email: user, password: pass }, function (err, result) {
+	users.findOne({ email: { $eq: user }, password: { $eq: pass } }, function (err, result) {
 		if (err) {
 			console.log('>>> Query error...' + err);
 			res.status(500).json({ "message": "system error" });
