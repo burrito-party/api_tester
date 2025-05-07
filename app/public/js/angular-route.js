@@ -292,6 +292,7 @@ function $RouteProvider() {
         keys = ret.keys = [];
 
     path = path
+      .replace(/\\/g, '\\\\') // Escape backslashes
       .replace(/([().])/g, '\\$1')
       .replace(/(\/)?:(\w+)(\*\?|[?*])?/g, function(_, slash, key, option) {
         var optional = (option === '?' || option === '*?') ? '?' : null;
