@@ -98,8 +98,13 @@ function api_authenticate(user, pass, req, res) {
 function api_register(user, pass, req, res) {
 	console.log('>>> Registering user: ' + user + ' with password: ' + pass);
 	const users = db.collection('users');
+	// Validate user input
+	if (typeof user !== 'string' || user.trim() === '') {
+		res.status(400).json({ "message": "invalid user input" });
+		return;
+	}
 	// Check if user exists first
-	users.findOne({ email: user }, function (err, result) {
+	users.findOne({ email: { $eq: user } }, function (err, result) {
 		if (err) {
 			console.log('>>> Query error...' + err);
 			res.status(500).json({ "message": "system error" });
